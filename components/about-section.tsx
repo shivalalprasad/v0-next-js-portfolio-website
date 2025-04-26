@@ -2,13 +2,11 @@
 
 import { motion, useScroll, useTransform } from "framer-motion"
 import Image from "next/image"
-import { fetchAboutData } from "@/lib/data"
-import { useEffect, useState, useRef } from "react"
-import type { AboutData } from "@/lib/types"
+import { useRef } from "react"
+import { useData } from "@/lib/data-context"
 
 export function AboutSection() {
-  const [aboutData, setAboutData] = useState<AboutData | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const { aboutData, isLoading } = useData()
   const ref = useRef<HTMLDivElement>(null)
 
   const { scrollYProgress } = useScroll({
@@ -21,21 +19,6 @@ export function AboutSection() {
   const bottomBgY = useTransform(scrollYProgress, [0, 1], ["20%", "0%"])
   const imageY = useTransform(scrollYProgress, [0, 1], ["0%", "10%"])
   const contentY = useTransform(scrollYProgress, [0, 1], ["10%", "0%"])
-
-  useEffect(() => {
-    const getAboutData = async () => {
-      try {
-        const data = await fetchAboutData()
-        setAboutData(data)
-      } catch (error) {
-        console.error("Error fetching about data:", error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    getAboutData()
-  }, [])
 
   if (isLoading) {
     return (

@@ -1,14 +1,12 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useRef } from "react"
 import { motion, useScroll, useTransform } from "framer-motion"
 import { ProjectCard } from "./project-card"
-import { fetchProjects } from "@/lib/data"
-import type { Project } from "@/lib/types"
+import { useData } from "@/lib/data-context"
 
 export function ProjectsSection() {
-  const [projects, setProjects] = useState<Project[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+  const { projects, isLoading } = useData()
   const ref = useRef<HTMLDivElement>(null)
 
   const { scrollYProgress } = useScroll({
@@ -17,21 +15,6 @@ export function ProjectsSection() {
   })
 
   const y = useTransform(scrollYProgress, [0, 1], ["5%", "-5%"])
-
-  useEffect(() => {
-    const getProjects = async () => {
-      try {
-        const data = await fetchProjects()
-        setProjects(data)
-      } catch (error) {
-        console.error("Error fetching projects:", error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    getProjects()
-  }, [])
 
   return (
     <section id="projects" ref={ref} className="py-20 relative overflow-hidden">
@@ -77,7 +60,7 @@ export function ProjectsSection() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {projects.map((project, index) => (
               <motion.div
-                key={project.id}
+                key={project._id}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}

@@ -5,6 +5,8 @@ import "./globals.css"
 import Navigation from "@/components/navigation"
 import { ThemeProvider } from "@/components/theme-provider"
 import { ScrollProgress } from "@/components/scroll-progress"
+import { ConvexClientProvider } from "@/lib/convex-client-provider"
+import { DataProvider } from "@/lib/data-context"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -24,11 +26,15 @@ export default function RootLayout({
       <body
         className={`${inter.className} bg-gradient-to-br from-emerald-50 to-sky-50 dark:from-slate-900 dark:to-slate-800 min-h-screen`}
       >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <ScrollProgress />
-          <Navigation />
-          <div className="pt-1">{children}</div>
-        </ThemeProvider>
+        <ConvexClientProvider>
+          <DataProvider>
+            <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+              <ScrollProgress />
+              <Navigation />
+              <div className="pt-1">{children}</div>
+            </ThemeProvider>
+          </DataProvider>
+        </ConvexClientProvider>
       </body>
     </html>
   )

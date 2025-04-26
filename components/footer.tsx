@@ -3,41 +3,20 @@
 import { motion } from "framer-motion"
 import Link from "next/link"
 import { Github, Linkedin, Code, Heart } from "lucide-react"
-import { useState, useEffect, useRef } from "react"
-import { fetchDevInfo } from "@/lib/data"
-import type { DevInfo } from "@/lib/types"
+import { useData } from "@/lib/data-context"
 
 export function Footer() {
-  const [devInfo, setDevInfo] = useState<DevInfo | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const ref = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const getDevInfo = async () => {
-      try {
-        const data = await fetchDevInfo()
-        setDevInfo(data)
-      } catch (error) {
-        console.error("Error fetching DevInfo:", error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    getDevInfo()
-  }, [])
+  const { devInfo, isLoading } = useData()
 
   if (isLoading) {
     return (
-      <section id="about" className="py-20">
+      <footer className="py-10 border-t border-slate-200 dark:border-slate-800">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="h-[400px] rounded-lg bg-slate-200 dark:bg-slate-800 animate-pulse"></div>
+          <div className="h-20 bg-slate-200 dark:bg-slate-800 animate-pulse rounded"></div>
         </div>
-      </section>
+      </footer>
     )
   }
-
-  if (!devInfo) return null
 
   return (
     <footer className="py-10 border-t border-slate-200 dark:border-slate-800">
@@ -65,33 +44,39 @@ export function Footer() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="flex space-x-6"
           >
-            <Link
-              href={devInfo.links.github || "https://github.com"}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary transition-colors hover:scale-110 transform duration-200"
-            >
-              <Github size={20} />
-              <span className="sr-only">GitHub</span>
-            </Link>
-            <Link
-              href={devInfo.links.linkedin || "https://linkedin.com"}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary transition-colors hover:scale-110 transform duration-200"
-            >
-              <Linkedin size={20} />
-              <span className="sr-only">LinkedIn</span>
-            </Link>
-            <Link
-              href={devInfo.links.leetcode || "https://leetcode.com"}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary transition-colors hover:scale-110 transform duration-200"
-            >
-              <Code size={20} />
-              <span className="sr-only">LeetCode</span>
-            </Link>
+            {devInfo?.links?.github && (
+              <Link
+                href={devInfo.links.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary transition-colors hover:scale-110 transform duration-200"
+              >
+                <Github size={20} />
+                <span className="sr-only">GitHub</span>
+              </Link>
+            )}
+            {devInfo?.links?.linkedin && (
+              <Link
+                href={devInfo.links.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary transition-colors hover:scale-110 transform duration-200"
+              >
+                <Linkedin size={20} />
+                <span className="sr-only">LinkedIn</span>
+              </Link>
+            )}
+            {devInfo?.links?.leetcode && (
+              <Link
+                href={devInfo.links.leetcode}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary transition-colors hover:scale-110 transform duration-200"
+              >
+                <Code size={20} />
+                <span className="sr-only">LeetCode</span>
+              </Link>
+            )}
           </motion.div>
         </div>
 

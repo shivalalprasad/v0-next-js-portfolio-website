@@ -1,15 +1,18 @@
 "use client"
 
 import type React from "react"
-
 import { useState, useRef } from "react"
 import { motion, useScroll, useTransform } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Mail, MessageSquare, Send, ArrowRight } from "lucide-react"
+import { useData } from "@/lib/data-context"
 
 export function ContactSection() {
+  const { devInfo, isLoading } = useData()
+
+  // Form state
   const [formState, setFormState] = useState({
     name: "",
     email: "",
@@ -17,48 +20,67 @@ export function ContactSection() {
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
 
+  // Always initialize hooks, regardless of loading state
+  const ref = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
   })
-
   const y = useTransform(scrollYProgress, [0, 1], ["5%", "-5%"])
+  const topMotionY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"])
+  const bottomMotionY = useTransform(scrollYProgress, [0, 1], ["30%", "0%"])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormState((prev) => ({ ...prev, [name]: value }))
+    setFormState({
+      ...formState,
+      [e.target.name]: e.target.value,
+    })
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-
-    // In a real app, you would send the form data to your API devInfo
-    console.log("Form submitted:", formState)
+    // Simulate form submission delay
+    await new Promise((resolve) => setTimeout(resolve, 2000))
 
     setIsSubmitting(false)
     setIsSubmitted(true)
-    setFormState({ name: "", email: "", message: "" })
+
+    // Reset form after submission
+    setFormState({
+      name: "",
+      email: "",
+      message: "",
+    })
 
     // Reset success message after 5 seconds
     setTimeout(() => setIsSubmitted(false), 5000)
   }
 
+  // If loading, show a loading skeleton
+  if (isLoading) {
+    return (
+      <section id="contact" className="py-20">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="h-[400px] rounded-lg bg-slate-200 dark:bg-slate-800 animate-pulse"></div>
+        </div>
+      </section>
+    )
+  }
+
+  // Otherwise, show the full contact section
   return (
     <section id="contact" ref={ref} className="py-20 relative overflow-hidden">
       {/* Background decorative elements */}
       <motion.div
         className="absolute top-20 right-10 w-64 h-64 bg-primary/5 rounded-full blur-3xl"
-        style={{ y: useTransform(scrollYProgress, [0, 1], ["0%", "30%"]) }}
+        style={{ y: topMotionY }}
       />
       <motion.div
         className="absolute bottom-20 left-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl"
-        style={{ y: useTransform(scrollYProgress, [0, 1], ["30%", "0%"]) }}
+        style={{ y: bottomMotionY }}
       />
 
       <div className="container mx-auto px-4 md:px-6 relative">
@@ -102,9 +124,7 @@ export function ContactSection() {
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Email</h3>
-                  <p className="text-slate-700 dark:text-slate-300">
-                me@shivalalprasad.dev
-                  </p>
+                  <p className="text-slate-700 dark:text-slate-300">{devInfo?.email || "hello@example.com"}</p>
                 </div>
               </motion.div>
 
@@ -121,7 +141,7 @@ export function ContactSection() {
                   <p className="text-slate-700 dark:text-slate-300">
                     Find me on{" "}
                     <a
-                      href="https://linkedin.com/in/shivalalprasad"
+                      href={devInfo?.links?.linkedin || "https://linkedin.com"}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-primary hover:underline"
@@ -130,7 +150,7 @@ export function ContactSection() {
                     </a>{" "}
                     and{" "}
                     <a
-                      href="https://github.com/shivalalprasad"
+                      href={devInfo?.links?.github || "https://github.com"}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-primary hover:underline"

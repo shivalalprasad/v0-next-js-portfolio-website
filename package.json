@@ -59,7 +59,10 @@
     "vaul": "^0.9.6",
     "zod": "^3.24.1",
     "@emotion/is-prop-valid": "latest",
-    "framer-motion": "latest"
+    "@auth0/auth0-react": "latest",
+    "@clerk/clerk-react": "latest",
+    "framer-motion": "latest",
+    "convex": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",
