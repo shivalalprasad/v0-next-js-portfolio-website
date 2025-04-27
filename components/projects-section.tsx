@@ -4,6 +4,7 @@ import { useRef } from "react"
 import { motion, useScroll, useTransform } from "framer-motion"
 import { ProjectCard } from "./project-card"
 import { useData } from "@/lib/data-context"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export function ProjectsSection() {
   const { projects, isLoading } = useData()
@@ -53,7 +54,17 @@ export function ProjectsSection() {
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-[400px] rounded-lg bg-slate-200 dark:bg-slate-800 animate-pulse"></div>
+              <div key={i} className="h-[400px]">
+                <Skeleton className="h-48 sm:h-64 w-full mb-4" />
+                <Skeleton className="h-8 w-3/4 mb-2" />
+                <Skeleton className="h-20 w-full mb-4" />
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {[1, 2, 3, 4].map((j) => (
+                    <Skeleton key={j} className="h-6 w-16" />
+                  ))}
+                </div>
+                <Skeleton className="h-10 w-full" />
+              </div>
             ))}
           </div>
         ) : (

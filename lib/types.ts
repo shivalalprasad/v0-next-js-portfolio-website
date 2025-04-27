@@ -1,6 +1,3 @@
-import type { Doc } from "../convex/_generated/dataModel"
-
-// If Convex is not available, we'll use these types as fallbacks
 export interface DevInfo {
   _id: string
   _creationTime: number
@@ -36,8 +33,3 @@ export interface AboutData {
   bio: string[]
   skills: string[]
 }
-
-// Export Convex document types if available
-export type ConvexDevInfo = Doc<"devInfo">
-export type ConvexProject = Doc<"projects">
-export type ConvexAboutData = Doc<"aboutData">

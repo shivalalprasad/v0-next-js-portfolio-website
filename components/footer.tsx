@@ -4,6 +4,7 @@ import { motion } from "framer-motion"
 import Link from "next/link"
 import { Github, Linkedin, Code, Heart } from "lucide-react"
 import { useData } from "@/lib/data-context"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export function Footer() {
   const { devInfo, isLoading } = useData()
@@ -12,7 +13,20 @@ export function Footer() {
     return (
       <footer className="py-10 border-t border-slate-200 dark:border-slate-800">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="h-20 bg-slate-200 dark:bg-slate-800 animate-pulse rounded"></div>
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="mb-4 md:mb-0">
+              <Skeleton className="h-8 w-40 mb-2" />
+              <Skeleton className="h-4 w-60" />
+            </div>
+            <div className="flex space-x-6">
+              <Skeleton className="h-6 w-6" />
+              <Skeleton className="h-6 w-6" />
+              <Skeleton className="h-6 w-6" />
+            </div>
+          </div>
+          <div className="mt-6 text-center">
+            <Skeleton className="h-4 w-60 mx-auto" />
+          </div>
         </div>
       </footer>
     )

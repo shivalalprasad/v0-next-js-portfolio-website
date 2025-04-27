@@ -1,7 +1,7 @@
 "use client"
 
 import { createContext, useContext, type ReactNode, useState, useEffect } from "react"
-import { useMockDevInfo, useMockProjects, useMockAboutData } from "./use-mock-data"
+import { fetchDevInfo, fetchProjects, fetchAboutData } from "./data"
 import type { DevInfo, Project, AboutData } from "./types"
 
 interface DataContextType {
@@ -18,66 +18,42 @@ const DataContext = createContext<DataContextType>({
   isLoading: true,
 })
 
-// Helper to check if we're in a preview environment
-function isPreviewEnvironment() {
-  // Check for common preview environment indicators
-  return (
-    process.env.NEXT_PUBLIC_VERCEL_ENV === "preview" ||
-    process.env.NEXT_PUBLIC_VERCEL_ENV === "development" ||
-    !process.env.NEXT_PUBLIC_CONVEX_URL ||
-    (typeof window !== "undefined" && window.location.hostname === "localhost")
-  )
-}
-
 export function DataProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true)
-
-  // Get mock data
-  const mockDevInfo = useMockDevInfo()
-  const mockProjects = useMockProjects()
-  const mockAboutData = useMockAboutData()
-
-  // Initialize with mock data
-  const [data, setData] = useState({
-    devInfo: mockDevInfo,
-    projects: mockProjects,
-    aboutData: mockAboutData,
+  const [data, setData] = useState<{
+    devInfo: DevInfo | null
+    projects: Project[]
+    aboutData: AboutData | null
+  }>({
+    devInfo: null,
+    projects: [],
+    aboutData: null,
   })
 
   useEffect(() => {
-    // Always use mock data in preview environments
-    if (isPreviewEnvironment()) {
-      console.log("Using mock data in preview environment")
-      // Simulate loading delay for a smoother experience
-      const timer = setTimeout(() => {
-        setIsLoading(false)
-      }, 500)
-      return () => clearTimeout(timer)
-    }
-
-    // In production, try to fetch real data
-    const fetchData = async () => {
+    const loadData = async () => {
       try {
-        // Simulate loading delay for a smoother experience
-        await new Promise((resolve) => setTimeout(resolve, 500))
+        // Fetch all data in parallel
+        const [devInfoData, projectsData, aboutDataData] = await Promise.all([
+          fetchDevInfo(),
+          fetchProjects(),
+          fetchAboutData(),
+        ])
 
-        // In a real environment, we would fetch data here
-        // For now, just use mock data
         setData({
-          devInfo: mockDevInfo,
-          projects: mockProjects,
-          aboutData: mockAboutData,
+          devInfo: devInfoData,
+          projects: projectsData,
+          aboutData: aboutDataData,
         })
       } catch (error) {
-        console.error("Error fetching data:", error)
-        // Fall back to mock data on error
+        console.error("Error loading data:", error)
       } finally {
         setIsLoading(false)
       }
     }
 
-    fetchData()
-  }, [mockDevInfo, mockProjects, mockAboutData])
+    loadData()
+  }, [])
 
   return (
     <DataContext.Provider

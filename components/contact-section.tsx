@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Mail, MessageSquare, Send, ArrowRight } from "lucide-react"
 import { useData } from "@/lib/data-context"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export function ContactSection() {
   const { devInfo, isLoading } = useData()
@@ -64,7 +65,32 @@ export function ContactSection() {
     return (
       <section id="contact" className="py-20">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="h-[400px] rounded-lg bg-slate-200 dark:bg-slate-800 animate-pulse"></div>
+          <div className="max-w-3xl mx-auto">
+            <div className="text-center mb-12">
+              <Skeleton className="h-10 w-1/2 mx-auto mb-4" />
+              <Skeleton className="h-6 w-3/4 mx-auto" />
+            </div>
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="space-y-6">
+                <div className="flex items-start space-x-4">
+                  <Skeleton className="h-12 w-12 rounded-full" />
+                  <div>
+                    <Skeleton className="h-6 w-24 mb-2" />
+                    <Skeleton className="h-4 w-40" />
+                  </div>
+                </div>
+                <div className="flex items-start space-x-4">
+                  <Skeleton className="h-12 w-12 rounded-full" />
+                  <div>
+                    <Skeleton className="h-6 w-24 mb-2" />
+                    <Skeleton className="h-4 w-40" />
+                  </div>
+                </div>
+                <Skeleton className="h-40 w-full rounded-lg" />
+              </div>
+              <Skeleton className="h-80 w-full rounded-lg" />
+            </div>
+          </div>
         </div>
       </section>
     )

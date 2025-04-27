@@ -7,6 +7,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { useRef } from "react"
 import { useData } from "@/lib/data-context"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export function HeroSection() {
   const { devInfo, isLoading } = useData()
@@ -26,13 +27,13 @@ export function HeroSection() {
       <section className="pt-32 pb-20 md:pt-40 md:pb-28">
         <div className="container mx-auto px-4 md:px-6">
           <div className="flex flex-col items-center">
-            <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-slate-200 dark:bg-slate-800 animate-pulse mb-8"></div>
-            <div className="w-3/4 h-12 bg-slate-200 dark:bg-slate-800 animate-pulse mb-4"></div>
-            <div className="w-1/2 h-8 bg-slate-200 dark:bg-slate-800 animate-pulse mb-8"></div>
-            <div className="w-full max-w-[600px] h-20 bg-slate-200 dark:bg-slate-800 animate-pulse mb-8"></div>
+            <Skeleton className="w-32 h-32 md:w-40 md:h-40 rounded-full mb-8" />
+            <Skeleton className="w-3/4 h-12 mb-4" />
+            <Skeleton className="w-1/2 h-8 mb-8" />
+            <Skeleton className="w-full max-w-[600px] h-20 mb-8" />
             <div className="flex space-x-4 mb-8">
-              <div className="w-32 h-10 bg-slate-200 dark:bg-slate-800 animate-pulse"></div>
-              <div className="w-32 h-10 bg-slate-200 dark:bg-slate-800 animate-pulse"></div>
+              <Skeleton className="w-32 h-10" />
+              <Skeleton className="w-32 h-10" />
             </div>
           </div>
         </div>

@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform } from "framer-motion"
 import Image from "next/image"
 import { useRef } from "react"
 import { useData } from "@/lib/data-context"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export function AboutSection() {
   const { aboutData, isLoading } = useData()
@@ -24,7 +25,23 @@ export function AboutSection() {
     return (
       <section id="about" className="py-20">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="h-[400px] rounded-lg bg-slate-200 dark:bg-slate-800 animate-pulse"></div>
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <Skeleton className="h-[400px] rounded-lg" />
+            <div className="space-y-4">
+              <Skeleton className="h-10 w-1/2 mb-6" />
+              <Skeleton className="h-24 w-full" />
+              <Skeleton className="h-24 w-full" />
+              <Skeleton className="h-24 w-full" />
+              <div className="mt-8">
+                <Skeleton className="h-8 w-1/3 mb-4" />
+                <div className="flex flex-wrap gap-2">
+                  {Array.from({ length: 12 }).map((_, i) => (
+                    <Skeleton key={i} className="h-8 w-20" />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     )
