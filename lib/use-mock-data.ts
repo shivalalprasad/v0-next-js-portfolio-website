@@ -107,3 +107,8 @@ export function useMockAboutData(): AboutData {
     ],
   }
 }
+
+// Create server-safe versions of the mock data functions
+export const getMockDevInfo = useMockDevInfo
+export const getMockProjects = useMockProjects
+export const getMockAboutData = useMockAboutData

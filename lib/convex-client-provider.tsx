@@ -13,6 +13,17 @@ function isValidUrl(string: string) {
   }
 }
 
+// Helper to check if we're in a preview environment
+function isPreviewEnvironment() {
+  // Check for common preview environment indicators
+  return (
+    process.env.NEXT_PUBLIC_VERCEL_ENV === "preview" ||
+    process.env.NEXT_PUBLIC_VERCEL_ENV === "development" ||
+    !process.env.NEXT_PUBLIC_CONVEX_URL ||
+    (typeof window !== "undefined" && window.location.hostname === "localhost")
+  )
+}
+
 export function ConvexClientProvider({ children }: { children: ReactNode }) {
   const [client, setClient] = useState<ConvexReactClient | null>(null)
   const [isInitialized, setIsInitialized] = useState(false)
@@ -21,6 +32,12 @@ export function ConvexClientProvider({ children }: { children: ReactNode }) {
     // Only run once
     if (isInitialized) return
     setIsInitialized(true)
+
+    // Skip Convex initialization in preview environments
+    if (isPreviewEnvironment()) {
+      console.log("Skipping Convex initialization in preview environment")
+      return
+    }
 
     // Only create the client on the client side
     if (typeof window === "undefined") return
